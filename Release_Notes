@@ -1,0 +1,39 @@
+July 2018
+
+AER Extraterrestrial Solar Irradiance Package
+extract_solar_v1.5
+
+Solar irradiance based on the NRLSSI2 model (Lean and Woods, 2010) has been implemented -- we recommend that users 
+use this specfication. NRLSSI2 models solar variability, and AER's extract_solar package used in conjunction with LBLRTM
+now allows a number of options to handle variability consistent with NRLSSI2. To this end, extract_solar now includes 
+a new database that consists of three components:
+- a component that does not vary with solar cycle, constructed by merging functions from separate spectral regions that
+together span 100-86500 cm-1 at a spectral resolution of 0.01 cm-1: 1) from 4000-14800 cm-1, the high-resolution solar 
+transmittance data from Toon scaled to be consistent with the coarser irradiance values of NRLSSI2; 2) from 100-4000 cm-1 
+and 14800-49980 cm-1, the high-resolution Kurucz irradiance values scaled to be consistent with the coarser irradiance values
+ of NRLSSI2; 3) from 49980-86500 cm-1, the coarse resolution NRLSSI2 irradiance values interpolated to 0.01 cm-1.
+- NRLSSI2 facular brightening component at a spectral resolution of 0.01 cm-1. This component varies with solar cycle.
+ The high-resolution values, when integrated in each NRLSSI2 channel, reproduce the respective NRLSSI2 irradiance values.
+- NRLSSI2 sunspot darkening component at a spectral resolution of 0.01 cm-1. This component varies with solar cycle.
+ The high-resolution values, when integrated in each NRLSSI2 channel, reproduce the respective NRLSSI2 irradiance values.
+These latter two terms are stored for average solar activity conditions for Solar Cycles 13-24, as specified by NRLSSI2.
+
+The extract_solar package also has a database that consists of the sum of these three components. We recommend that users 
+not interested in solar variability use the option that is based on this combined database.
+
+extract_solar can generate a binary (SOLAR.RAD) or ascii file that utilizes this combined database. Alternatively, the code
+will extract (in binary or ascii) all three of the individual components, which can be combined in multiple ways when 
+running LBLRTM (see LBLRTM instructions).
+
+The code retains its previous capability to generate a binary or ascii file based on the high-resolution Kurucz database 
+(50-50000 cm-1) (Kurucz, 1992).
+
+
+Lean, J. and T.N. Woods, Solar spectral irradiance measurements and models, 
+in Evolving Solar Physics and the Climates of Earth and Space, K. Schrijver 
+and G. Siscoe Eds, Cambridge University Press,269-298, 2010.
+
+Kurucz, R.L., Synthetic infrared spectra, in Infrared Solar Physics,
+IAU Symp. 154, edited by D.M. Rabin and J.T. Jefferies, Kluwer, Acad.,
+Norwell, MA, 1992.
+

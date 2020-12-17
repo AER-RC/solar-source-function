@@ -1,0 +1,19 @@
+Compiling and linking extract solar and the solar
+databases.
+
+There are two makefiles:
+
+   Makefile.pgi: uses pgf90
+
+   Makefile.gnu: uses gfortran
+
+There are three database options (see extract_solar_instructions for details):
+
+To compile 
+
+	make -f Makefile.xxx 
+
+where 
+
+   xxx: pgi or gnu
+

@@ -1,0 +1,5 @@
+Solar control file for program extract_solar.f
+int3nrl
+binary
+solar_rad_nrl3comp_19000_23000
+19000.000    23000.000000  0.005  1.0

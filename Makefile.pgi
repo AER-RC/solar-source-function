@@ -1,0 +1,9 @@
+# $Id: Makefile.little_Endian 11765 2004-05-06 20:51:13Z mshep $
+
+# Compiles 
+
+extract_solar_v1.5.0.little_Endian: src/extract_solar.f
+	pgf90 -o $@ $?
+
+
+

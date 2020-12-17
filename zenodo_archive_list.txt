@@ -1,0 +1,4 @@
+https://zenodo.org/record/4336064/files/build_comb_solar_rad_avg.bin
+https://zenodo.org/record/4336064/files/build_comb_solar_rad_multi_comp.bin
+https://zenodo.org/record/4336064/files/solar.kurucz.rad.mono.0.4R.bin
+https://zenodo.org/record/4336064/files/solar.kurucz.rad.mono.full_disk.bin.little_Endian

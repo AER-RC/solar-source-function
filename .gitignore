@@ -1,0 +1,3 @@
+data/*.bin
+md5sums.txt
+data/solar.kurucz.rad.mono.full_disk.bin.little_Endian

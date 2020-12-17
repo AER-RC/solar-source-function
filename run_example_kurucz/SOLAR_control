@@ -1,0 +1,5 @@
+Solar control file for LBLRTM example in run_example_solar_downwelling_kurucz
+interpl
+binary
+SOLAR.RAD
+19000.  23000. 0.0007   1.0

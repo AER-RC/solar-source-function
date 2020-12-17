@@ -1,0 +1,222 @@
+$Id: extract_solar_instructions 31755 2017-08-25 20:18:57Z kcadyper $
+
+		 Solar Source Function Library
+
+
+Date Created
+------------
+08/07/98 (Patrick Brown)
+
+
+Date Updated
+------------
+03/10/17 (Karen Cady-Pereira)
+
+
+References
+---------
+
+Lean, J. and T.N. Woods, Solar spectral irradiance measurements and models, 
+in Evolving Solar Physics and the Climates of Earth and Space, K. Schrijver 
+and G. Siscoe Eds, Cambridge University Press,269-298, 2010.
+
+Kurucz, R.L., Synthetic infrared spectra, in Infrared Solar Physics,
+IAU Symp. 154, edited by D.M. Rabin and J.T. Jefferies, Kluwer, Acad.,
+Norwell, MA, 1992.
+
+
+Overview
+--------
+
+The files contained in the library are as follows:
+
+
+Makefile.pgi and Makefile.gnu 
+
+        Compile fortran code and link to selected database. 
+	To execute, type:
+
+	make -f Makefile.pgi 
+
+or
+        make -f Makefile.gnu
+
+from the command line.
+
+
+build_comb_solar_rad_multi_comp.bin -
+                     Binary solar irradiance spectrum based on the NRLSSI2 model; it contains:
+                     - a temporallly invariant component, derived by modifying the high spectral
+                     Kurucz solar irradiance and Toon solar transmittance to obtain consistency 
+                     with the coarser NRLSSI2 model irradiance values; 
+                     - NRLSSI2 facular brightening and sunspot darkening components fixed to the 
+                     mean solar cycle.
+                     The spectral resolution is 0.01 cm-1. Units are W/(m2 cm-1).
+
+build_comb_solar_rad_avg.bin -
+                     Binary solar irradiance spectrum which contains the sum of 
+                     the three components described above averaged over the mean solar cycle.
+                     The spetral resolution is 0.01 cm-1. Units are (W/m2 cm-1).
+
+	*** Note: Toon data provided by Geoff Toon.
+
+
+solar.kurucz.rad.mono.full_disk.bin.little_Endian -
+                      Binary solar irradiance spectrum
+                      for the full solar disk. Spectral range spans
+                      50.000043-49999.933236 cm-1. Spectral resolution
+                      ranges from 0.0001 cm-1 at 50.000043 cm-1 to
+                      0.1 cm-1 at 49999.933236 cm-1. Units are W/(m2
+                      cm-1).
+
+
+solar.kurucz.rad.1cm-1binned.full_disk.asc - 
+                      ASCII solar irradiance
+                      spectrum for the full solar disk degraded to
+                      1 cm-1 spacing from the file
+                      "solar.kurucz.rad.mono.full_disk.bin". Spectral
+                      range spans 50.-50000. cm-1. Each 1 cm-1 bin is
+                      centered about an integer wavenumber value.
+                      Units are mW/(m2 cm-1).
+
+
+solar.kurucz.rad.mono.0.4R.bin - 
+                      Binary solar irradiance spectrum for
+                      the central 16% of the solar disk (normalized to
+                      the solid angle 6.8e-5 sr of the full disk).
+                      Spectral range spans 999.901587-10010.006856 cm-1.
+                      Spectral resolution ranges from 0.002 cm-1 at
+                      999.901587 cm-1 to 0.006 cm-1 at 10010.006856
+                      cm-1. Units are W/(m2 cm-1).
+
+
+
+extract_solar.f - 
+            Fortran program which extracts the binary solar data from
+            the desired file  and writes the spectra directly or
+            interpolated to a user-defined grid (input via the file
+            SOLAR_control) in ascii or binary format.
+
+
+
+----------------------------------------------------------------------------------------------
+
+INPUT FILE DESCRIPTION: SOLAR_control
+
+Record 1: Holerith description of file
+
+Record 2: CFLAG: Flag for interpolation or simple extraction of data
+
+          *** Note: when creating SOLAR.RAD files for LBLRTM use one of the intxxxx options.
+
+          "ext_nrl": extracts spectra from build_comb_solar_rad_avg.bin at its internal spectral resolution
+          "int_nrl": extracts spectra from build_comb_solar_rad_avg.bin and interpolates to a user specified
+                     resolution
+
+          "ext3nrl": extracts spectra from build_comb_solar_rad_multi_comp.bin at its internal spectral resolution
+          "int3nrl": extracts spectra from build_comb_solar_rad_multi_comp.bin and interpolates to a user specified
+                     resolution
+           *** Note:  All three terms are output 
+
+          "extract": extracts spectra from solar.kurucz.rad.mono.full_disk.bin.little_Endian at its internal spectral resolution
+          "interpl": extracts spectra from solar.kurucz.rad.mono.full_disk.bin.little_Endian and interpolates to a user specified
+                     resolution
+
+
+Record 3: CFLAG_FORM: Flag for output format of data
+
+        "binary": If CFLAG='intxxxx' (xxxx='erpl','_nrl' or ''3nrl'
+		     code outputs binary file for use with LBLRTM (SOLAR.RAD type file).
+                  If CFLAG = 'extxxxx' outputs extracted solar data to a binary file.
+
+         *** NOTE: Binary output files for LBLRTM consist of a single file header and multiple 
+                   panels; each panel contains a panel header and data for 2400 spectral points.
+                   If CFLAG ='int3nrl' each panel contains three sets of spectral points  (constant term,
+                   facular brightening, sunspot darkening). 
+
+                   Extracted binary output files consist of a single file header and multiple 
+                   panels; each panel contains a panel header and data for 4000 spectral points.
+                   If CFLAG ='ext3nrl' each panel contains three sets of spectral points  (constant term,
+                   facular brightening, sunspot darkening). 
+           
+         *** VERY IMPORTANT! When running extract_solar to generate binary input for 
+                             LBLRTM, it is necessary that the inputs to extract_solar and
+                             LBLRTM be consistent; if they are not, LBLRTM will either 
+                             generate incorrect answers or not run at all. See table below
+                             for allowed combinations.
+
+ Solar irradiance           Interpolation      ISOLVAR (in LBLRTM TAPE5)
+  Combined Average            int_nrl              0
+  Combined 3 Components       int3nrl              1 or 2
+  Kurucz                      interpl             -1
+
+
+
+        "ascii2" outputs ascii file with one frequency and one (or three if using NRLSSI2 three 
+                 component solar file) solar irradiance values per record (two or four columns)  
+        "ascii1" outputs ascii file with one (or three, as above) solar irradiance values per
+                 record (one or three columns)
+        "asciib" outputs ascii file blocks of 80 values
+
+         *** NOTE: All ascii output files contain a descriptive file
+                   header with the following information:
+
+	    For cases where CFLAG="extxxxx" , the header consists of
+
+	    V1, V2, VC1, NPTS, SOL_MIN, SOL_MAX, SOL_INT
+
+            V1 = starting wavenumber value in selected spectrum
+            V2 = ending wavenumber value in selected spectrum
+            VC1 = constant used to define spectral grid, 
+                  where the spectral values for the NRLSSI2 data are given by
+                     v_i = v1+vc1*(i-1) 
+                  and for Kurucz by
+                     v_i = v1*exp(vc1*(i-1)*1.e-6)
+            NPTS = total number of values output
+            SOL_MIN = minumum solar value output
+            SOL_MAX = maximum solar value output
+            SOL_INT = integrated output solar spectrum value (constant term only when file contains three terms)
+
+            For cases where CFLAG= "intxxxx" , the header consists of
+
+            V1, V2, DV, NPTS, SOL_MIN, SOL_MAX, SOL_INT
+
+            V1 = starting wavenumber value in selected spectrum
+            V2 = ending wavenumber value in selected spectrum
+            DV = wavenumber spacing for interpolated result
+            NPTS = total number of values output
+            SOL_MIN = minumum solar value output
+            SOL_MAX = maximum solar value output
+            SOL_INT = integrated output solar spectrum value (constant term only when file contains three terms)
+
+                  
+
+Record 4: Full pathname of the output file
+
+Record 5: Spectral range to be extracted or interpolated
+        The format is as follows:
+
+        For cases where CFLAG='extxxxx' (Record 2)
+
+
+	        VMIN, VMAX, SCALE_FAC
+
+                VMIN: Starting wavenumber for extraction
+                VMAX: Ending wavenumber for extraction
+                SCALE_FAC: Scale factor applied to solar irradiance
+                      function (default value is 1.0)
+
+        For cases where CFLAG="intxxxx" (Record 2)
+
+	        VMIN, VMAX, DVOUT, SCALE_FAC
+
+                VMIN: Starting wavenumber for extraction
+                VMAX: Ending wavenumber for extraction
+                DVOUT: Output grid spacing
+                SCALE_FAC: Scale factor applied to solar irradiance
+                      function (default value is 1.0); not used
+                      if binary output is requested
+
+
+NOTE: All records following Record 5 are ignored. Several example cases
+      are contained in the sample SOLAR_control.various file.
