@@ -56,6 +56,7 @@ Note that we install `v1.3.0` of the package, which was released in February 202
 
 # Downloading and Staging the SSF Binary Inputs
 
+extract_solar requires a solar source function; there are four different versions available, which must be downloaded from Zenodo.
 Assuming the user has `cd`'d into `solar-source-function`, they can download and untar the necessary binary inputs with:
 
 ```
