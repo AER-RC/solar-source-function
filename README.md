@@ -19,7 +19,7 @@ Currently, the latest release is SSF v1.5, and it is recommended that this be th
 git checkout tags/v1.5
 ```
 
-Instead of cloning, users can also download an SSF [tarball](https://github.com/AER-RC/solar-source_function/releases/tag/v2.7.1) and unpack it:
+Instead of cloning, users can also download an SSF [tarball](https://github.com/AER-RC/solar-source-function/releases/tag/v1.5) and unpack it:
 
 ```
 tar xvf solar-source-function_v1.5.tar.gz
@@ -46,7 +46,7 @@ xxx: pgi or gnu
 
 # Dependencies
 
-Before running the download script, the user will need to install the Zenodo Python API, which can be done with:
+Running this code is dependent on a couple of binary files that are available for [direct download on Zenodo](https://zenodo.org/record/4336064) -- these were built on Linux systems with CentOS7 architecture. The user is responsible for staging files as the [code expects them](#staging). Alternatively, downloading _and_ staging is done in [`get_solar_binary_data.py`](https://github.com/AER-RC/solar-source-function/blob/master/get_solar_binary_data.py), but before running the download script, the user will need to install the Zenodo Python API, which can be done with:
 
 ```
 pip install -r requirements.txt
@@ -54,7 +54,7 @@ pip install -r requirements.txt
 
 Note that we install `v1.3.0` of the package, which was released in February 2020. The code in this repository is currently incompatible with `v1.3.2`.
 
-# Downloading and Staging the SSF Binary Inputs
+# Downloading and Staging the SSF Binary Inputs <a name="staging"></a>
 
 extract_solar requires a solar source function; there are four different versions available, which must be downloaded from Zenodo.
 Assuming the user has `cd`'d into `solar-source-function`, they can download and untar the necessary binary inputs with:
